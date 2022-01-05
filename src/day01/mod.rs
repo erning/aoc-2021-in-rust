@@ -1,21 +1,13 @@
 fn parse_input(input: &str) -> Vec<i32> {
-    return input.lines().map(|a| a.parse().unwrap()).collect();
+    return input.lines().map(|v| v.parse().unwrap()).collect();
 }
 
 pub fn part_one(input: &str) -> usize {
     let input = parse_input(input);
-    return input
-        .windows(2)
-        .map(|it| it[0] < it[1])
-        .filter(|it| *it)
-        .count();
+    return input.windows(2).filter(|v| v[0] < v[1]).count();
 }
 
 pub fn part_two(input: &str) -> usize {
     let input = parse_input(input);
-    return input
-        .windows(4)
-        .map(|it| it[0] < it[3])
-        .filter(|it| *it)
-        .count();
+    return input.windows(4).filter(|v| v[0] < v[3]).count();
 }
