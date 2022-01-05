@@ -1,28 +1,23 @@
-use std::fs::File;
-use std::io::Read;
-
+use std::any::Any;
+use std::fmt::Display;
 use aoc::*;
 
-fn read_input(day: i8, filename: &str) -> String {
-    let filename = format!("inputs/{:02}-{}.txt", day, filename);
-    let mut file = File::open(filename).unwrap();
-    let mut input = String::new();
-    file.read_to_string(&mut input).unwrap();
-    return input;
-}
-
 fn main() {
-    let puzzles = vec![(1, "Sonar Sweep", day01::part_one, day01::part_two)];
+    type PuzzleFunction = fn(&str) -> usize;
+    type Puzzle = (u8, &'static str, PuzzleFunction, PuzzleFunction);
 
-    let puzzle = puzzles[0];
+    let puzzles: Vec<Puzzle> = vec![
+        (1, "Sonar Sweep", day01::part_one, day01::part_two),
+        (2, "Dive!", day02::part_one, day02::part_two),
+    ];
 
-    let day = puzzle.0;
-    let title = puzzle.1;
-    let input = read_input(day, "input");
-    let part1 = puzzle.2;
-    let part2 = puzzle.3;
+    for puzzle in &puzzles {
+        let (day, title, part1, part2) = puzzle;
+        let input = read_input(1);
 
-    println!("--- Day {}: {} ---", day, title);
-    println!("Part One: {}", part1(input.as_str()));
-    println!("Part Two: {}", part2(input.as_str()));
+        println!("--- Day {}: {} ---", day, title);
+        println!("Part One: {}", part1(input.as_str()));
+        println!("Part Two: {}", part2(input.as_str()));
+        println!()
+    }
 }

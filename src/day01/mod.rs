@@ -11,3 +11,16 @@ pub fn part_two(input: &str) -> usize {
     let input = parse_input(input);
     return input.windows(4).filter(|v| v[0] < v[3]).count();
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::*;
+
+    #[test]
+    fn example() {
+        let input = read_example(1);
+        assert_eq!(part_one(input.as_str()), 7);
+        assert_eq!(part_two(input.as_str()), 5);
+    }
+}
