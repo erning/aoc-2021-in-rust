@@ -28,38 +28,7 @@ fn parse_input(input: &str) -> (Vec<u8>, Vec<Vec<u8>>) {
     (steps, boards)
 }
 
-pub fn part_one(input: &str) -> i32 {
-    let (steps, boards) = parse_input(input);
-
-    let mut marked: Vec<Vec<u8>> = vec![vec![]; boards.len()];
-    let mut rows: Vec<Vec<u8>> = vec![vec![0; WIDTH]; boards.len()];
-    let mut cols: Vec<Vec<u8>> = vec![vec![0; WIDTH]; boards.len()];
-
-    for step in steps {
-        for (i, board) in boards.iter().enumerate() {
-            let found = board.iter().enumerate().find(|&(_, &x)| x == step);
-            if found.is_none() {
-                continue;
-            }
-            let (j, &v) = found.unwrap();
-            marked[i].push(v as u8);
-            rows[i][j / WIDTH] += 1;
-            cols[i][j % WIDTH] += 1;
-            if rows[i][j / WIDTH] < 5 && cols[i][j % WIDTH] < 5 {
-                continue;
-            }
-            let t1: i32 = board.iter().map(|&v| v as i32).sum();
-            let t2: i32 = marked[i].iter().map(|&v| v as i32).sum();
-            return (t1 - t2) * v as i32;
-        }
-    }
-
-    0
-}
-
-pub fn part_two(input: &str) -> i32 {
-    let (steps, boards) = parse_input(input);
-
+fn simulate(steps: Vec<u8>, boards: Vec<Vec<u8>>, win: usize) -> i32{
     let mut won: HashSet<usize> = HashSet::new();
     let mut marked: Vec<Vec<u8>> = vec![vec![]; boards.len()];
     let mut rows: Vec<Vec<u8>> = vec![vec![0; WIDTH]; boards.len()];
@@ -82,7 +51,7 @@ pub fn part_two(input: &str) -> i32 {
                 continue;
             }
             won.insert(i);
-            if won.len() < boards.len() {
+            if won.len() < win {
                 continue;
             }
             let t1: i32 = board.iter().map(|&v| v as i32).sum();
@@ -92,6 +61,17 @@ pub fn part_two(input: &str) -> i32 {
     }
 
     0
+}
+
+pub fn part_one(input: &str) -> i32 {
+    let (steps, boards) = parse_input(input);
+    simulate(steps, boards, 1)
+}
+
+pub fn part_two(input: &str) -> i32 {
+    let (steps, boards) = parse_input(input);
+    let win = boards.len();
+    simulate(steps, boards, win)
 }
 
 #[cfg(test)]
