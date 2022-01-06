@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Vec<(&str, i32)> {
         .collect()
 }
 
-pub fn part_one(input: &str) -> String {
+pub fn part_one(input: &str) -> i32 {
     let input = parse_input(input);
     let mut pos = 0;
     let mut depth = 0;
@@ -26,10 +26,10 @@ pub fn part_one(input: &str) -> String {
             _ => {}
         }
     }
-    return (pos * depth).to_string();
+    return pos * depth;
 }
 
-pub fn part_two(input: &str) -> String {
+pub fn part_two(input: &str) -> i32 {
     let input = parse_input(input);
     let mut aim = 0;
     let mut pos = 0;
@@ -49,5 +49,5 @@ pub fn part_two(input: &str) -> String {
             _ => {}
         }
     }
-    return (pos * depth).to_string();
+    return pos * depth;
 }

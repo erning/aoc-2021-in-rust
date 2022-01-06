@@ -1,10 +1,24 @@
-use aoc::*;
 use std::env;
+use std::fmt::Display;
 
 fn main() {
-    let puzzles: Vec<(u8, &str, fn(&str) -> String, fn(&str) -> String)> = vec![
-        (1, "Sonar Sweep", day01::part_one, day01::part_two),
-        (2, "Dive!", day02::part_one, day02::part_two),
+    macro_rules! puzzle {
+        ($day:expr, $title:expr, $mod:ident) => {
+            (
+                $day,
+                $title,
+                |input| Box::new(aoc::$mod::part_one(input)),
+                |input| Box::new(aoc::$mod::part_two(input)),
+            )
+        };
+    }
+
+    type SolverFn = fn(&str) -> Box<dyn Display>;
+
+    let puzzles: Vec<(u8, &str, SolverFn, SolverFn)> = vec![
+        puzzle!(1, "Sonar Sweep", day01),
+        puzzle!(2, "Dive!", day02),
+        puzzle!(3, "Binary Diagnostic", day03),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {
@@ -22,13 +36,13 @@ fn main() {
     }
 
     for day in days {
-        let (_, title, part1, part2) = puzzles[day as usize - 1];
-        let input = read_as_string(day, filename);
+        let (_, title, part1, part2) = &puzzles[day as usize - 1];
+        let input = aoc::read_as_string(day, filename);
         let input = input.as_str();
 
         println!("--- Day {}: {} ---", day, title);
         println!("Part One: {}", part1(input));
         println!("Part Two: {}", part2(input));
-        println!()
+        println!();
     }
 }
