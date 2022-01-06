@@ -14,15 +14,9 @@ pub fn part_one(input: &str) -> i32 {
     let mut depth = 0;
     for step in input {
         match step {
-            ("forward", x) => {
-                pos += x;
-            }
-            ("up", x) => {
-                depth -= x;
-            }
-            ("down", x) => {
-                depth += x;
-            }
+            ("forward", x) => pos += x,
+            ("up", x) => depth -= x,
+            ("down", x) => depth += x,
             _ => {}
         }
     }
@@ -38,16 +32,25 @@ pub fn part_two(input: &str) -> i32 {
         match step {
             ("forward", x) => {
                 pos += x;
-                depth += aim * x;
+                depth += aim * x
             }
-            ("up", x) => {
-                aim -= x;
-            }
-            ("down", x) => {
-                aim += x;
-            }
+            ("up", x) => aim -= x,
+            ("down", x) => aim += x,
             _ => {}
         }
     }
     return pos * depth;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::read_example;
+
+    #[test]
+    fn example() {
+        let input = read_example(2);
+        assert_eq!(part_one(input.as_str()), 150);
+        assert_eq!(part_two(input.as_str()), 900);
+    }
 }

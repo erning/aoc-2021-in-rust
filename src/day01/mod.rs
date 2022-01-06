@@ -15,7 +15,7 @@ pub fn part_two(input: &str) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::*;
+    use crate::read_example;
 
     #[test]
     fn example() {
