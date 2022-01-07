@@ -28,7 +28,7 @@ fn parse_input(input: &str) -> (Vec<u8>, Vec<Vec<u8>>) {
     (steps, boards)
 }
 
-fn simulate(steps: Vec<u8>, boards: Vec<Vec<u8>>, win: usize) -> i32{
+fn simulate(steps: Vec<u8>, boards: Vec<Vec<u8>>, win: usize) -> i32 {
     let mut won: HashSet<usize> = HashSet::new();
     let mut marked: Vec<Vec<u8>> = vec![vec![]; boards.len()];
     let mut rows: Vec<Vec<u8>> = vec![vec![0; WIDTH]; boards.len()];

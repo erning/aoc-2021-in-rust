@@ -6,7 +6,7 @@ fn parse_input(input: &str) -> Vec<Vec<u8>> {
 }
 
 fn most_common_bit(bits: &[u8]) -> u8 {
-    let zero = bits.iter().filter(|&x| *x == 0).count();
+    let zero = bits.iter().filter(|&&x| x == 0).count();
     let one: usize = bits.len() - zero;
     match (zero, one) {
         (zero, one) if zero > one => 0,
