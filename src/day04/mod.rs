@@ -7,7 +7,7 @@ fn parse_input(input: &str) -> (Vec<u8>, Vec<Vec<u8>>) {
     let steps: Vec<u8> = lines
         .next()
         .unwrap()
-        .split(",")
+        .split(',')
         .map(|v| v.parse().unwrap())
         .collect();
 

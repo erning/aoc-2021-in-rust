@@ -44,7 +44,7 @@ pub fn part_one(input: &str) -> i32 {
 pub fn part_two(input: &str) -> i32 {
     let input = parse_input(input);
 
-    fn life_rating(input: &Vec<Vec<u8>>, is_oxygen: bool) -> i32 {
+    fn life_rating(input: &[Vec<u8>], is_oxygen: bool) -> i32 {
         let mut grid = input.to_vec();
         for x in 0..input[0].len() {
             if grid.len() <= 1 {

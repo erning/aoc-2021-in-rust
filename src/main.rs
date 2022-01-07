@@ -16,12 +16,12 @@ fn main() {
     type SolverFn = fn(&str) -> Box<dyn Display>;
 
     let puzzles: Vec<(u8, &str, SolverFn, SolverFn)> = vec![
-        puzzle!(01, "Sonar Sweep", day01),
-        puzzle!(02, "Dive!", day02),
-        puzzle!(03, "Binary Diagnostic", day03),
-        puzzle!(04, "Giant Squid", day04),
-        puzzle!(05, "Hydrothermal Venture", day05),
-        puzzle!(06, "Lanternfish", day06),
+        puzzle!(1, "Sonar Sweep", day01),
+        puzzle!(2, "Dive!", day02),
+        puzzle!(3, "Binary Diagnostic", day03),
+        puzzle!(4, "Giant Squid", day04),
+        puzzle!(5, "Hydrothermal Venture", day05),
+        puzzle!(6, "Lanternfish", day06),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {

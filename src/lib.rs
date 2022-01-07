@@ -13,12 +13,12 @@ pub fn read_as_string(day: u8, filename: &str) -> String {
     let mut file = File::open(filename).unwrap();
     let mut input = String::new();
     file.read_to_string(&mut input).unwrap();
-    return input;
+    input
 }
 
 pub fn read_input(day: u8) -> String {
-    return read_as_string(day, "input");
+    read_as_string(day, "input")
 }
 pub fn read_example(day: u8) -> String {
-    return read_as_string(day, "example");
+    read_as_string(day, "example")
 }

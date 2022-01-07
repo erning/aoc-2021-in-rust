@@ -66,9 +66,9 @@ After 18 days: 6,0,6,4,5,6,0,1,1,2,6,0,1,1,1,2,2,3,3,4,6,7,8,8,8,8";
             .map(|v| v / 2 + 1)
             .map(|v| v as u64)
             .collect();
-        let input = [3,4,3,1,2];
-        for day in 0..cases.len() {
-            assert_eq!(super::spawn(&input, day), cases[day] as u64);
+        let input = [3, 4, 3, 1, 2];
+        for (day, &expected) in cases.iter().enumerate() {
+            assert_eq!(super::spawn(&input, day), expected);
         }
     }
 

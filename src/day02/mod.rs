@@ -2,7 +2,7 @@ fn parse_input(input: &str) -> Vec<(&str, i32)> {
     input
         .lines()
         .map(|v| {
-            let mut t = v.split(" ");
+            let mut t = v.split(' ');
             (t.next().unwrap(), t.next().unwrap().parse::<i32>().unwrap())
         })
         .collect()
@@ -20,7 +20,7 @@ pub fn part_one(input: &str) -> i32 {
             _ => {}
         }
     }
-    return pos * depth;
+    pos * depth
 }
 
 pub fn part_two(input: &str) -> i32 {
@@ -39,7 +39,7 @@ pub fn part_two(input: &str) -> i32 {
             _ => {}
         }
     }
-    return pos * depth;
+    pos * depth
 }
 
 #[cfg(test)]
