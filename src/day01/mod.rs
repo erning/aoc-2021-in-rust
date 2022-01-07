@@ -20,8 +20,7 @@ mod tests {
     #[test]
     fn example() {
         let input = read_example(1);
-        let input = input.as_str();
-        assert_eq!(part_one(input), 7);
-        assert_eq!(part_two(input), 5);
+        assert_eq!(part_one(&input), 7);
+        assert_eq!(part_two(&input), 5);
     }
 }

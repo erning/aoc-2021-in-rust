@@ -21,6 +21,7 @@ fn main() {
         puzzle!(03, "Binary Diagnostic", day03),
         puzzle!(04, "Giant Squid", day04),
         puzzle!(05, "Hydrothermal Venture", day05),
+        puzzle!(06, "Lanternfish", day06),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {
@@ -32,8 +33,8 @@ fn main() {
         env::args().filter_map(|a| a.parse().ok()).collect();
 
     if days.is_empty() {
-        for (day, _, _, _) in &puzzles {
-            days.push(*day)
+        for &(day, _, _, _) in &puzzles {
+            days.push(day)
         }
     }
 

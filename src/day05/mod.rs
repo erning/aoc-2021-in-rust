@@ -79,12 +79,12 @@ mod tests {
     #[test]
     fn example_one() {
         let input = read_example(5);
-        assert_eq!(part_one(input.as_str()), 5);
+        assert_eq!(part_one(&input), 5);
     }
 
     #[test]
     fn example_two() {
         let input = read_example(5);
-        assert_eq!(part_two(input.as_str()), 12);
+        assert_eq!(part_two(&input), 12);
     }
 }

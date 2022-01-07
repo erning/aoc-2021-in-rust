@@ -50,7 +50,7 @@ mod tests {
     #[test]
     fn example() {
         let input = read_example(2);
-        assert_eq!(part_one(input.as_str()), 150);
-        assert_eq!(part_two(input.as_str()), 900);
+        assert_eq!(part_one(&input), 150);
+        assert_eq!(part_two(&input), 900);
     }
 }
