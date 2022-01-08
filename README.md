@@ -26,4 +26,8 @@ Part Two: 19172
 --- Day 6: Lanternfish ---
 Part One: 362346
 Part Two: 1639643057051
+
+--- Day 7: The Treachery of Whales ---
+Part One: 326132
+Part Two: 88612508
 ```
