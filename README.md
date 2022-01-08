@@ -30,4 +30,8 @@ Part Two: 1639643057051
 --- Day 7: The Treachery of Whales ---
 Part One: 326132
 Part Two: 88612508
+
+--- Day 8: Seven Segment Search ---
+Part One: 534
+Part Two: 1070188
 ```
