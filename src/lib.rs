@@ -1,5 +1,4 @@
-use std::fs::File;
-use std::io::Read;
+use std::fs;
 
 pub mod day01;
 pub mod day02;
@@ -12,10 +11,7 @@ pub mod day08;
 
 pub fn read_as_string(day: u8, filename: &str) -> String {
     let filename = format!("inputs/{:02}-{}.txt", day, filename);
-    let mut file = File::open(filename).unwrap();
-    let mut input = String::new();
-    file.read_to_string(&mut input).unwrap();
-    input
+    fs::read_to_string(filename).unwrap()
 }
 
 pub fn read_input(day: u8) -> String {
