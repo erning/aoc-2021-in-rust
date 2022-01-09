@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 fn parse_input(input: &str) -> Vec<Vec<i32>> {
     input
         .lines()
@@ -48,8 +50,44 @@ pub fn part_one(input: &str) -> i32 {
         .sum()
 }
 
-pub fn part_two(_input: &str) -> i32 {
-    -1
+pub fn part_two(input: &str) -> i32 {
+    let grid = parse_input(input);
+    let grid: Vec<&[i32]> = grid.iter().map(|row| row.as_slice()).collect();
+    let height = grid.len();
+    let width = grid[0].len();
+    let points = low_points(&grid);
+    let mut basin: Vec<i32> = Vec::new();
+    for (x, y) in points {
+        let mut visited: HashSet<(usize, usize)> = HashSet::new();
+        let mut exp: Vec<(usize, usize)> = vec![(x, y)];
+        while let Some((x, y)) = exp.pop() {
+            let v = grid[y][x];
+            visited.insert((x, y));
+            let neighbors: Vec<(usize, usize)> = NEIGHBORS
+                .iter()
+                .map(|(dx, dy)| (x as i32 + dx, y as i32 + dy))
+                .filter(|(x, y)| {
+                    x >= &0
+                        && x < &(width as i32)
+                        && y >= &0
+                        && y < &(height as i32)
+                })
+                .map(|(x, y)| (x as usize, y as usize))
+                .filter(|(x, y)| !visited.contains(&(*x, *y)))
+                .filter(|(x, y)| {
+                    let nv = grid[*y][*x];
+                    nv < 9 && nv > v
+                })
+                .collect();
+            for (x, y) in &neighbors {
+                exp.push((*x, *y));
+            }
+        }
+        basin.push(visited.len() as i32);
+    }
+    basin.sort_unstable();
+    basin.reverse();
+    basin[0] * basin[1] * basin[2]
 }
 
 #[cfg(test)]
