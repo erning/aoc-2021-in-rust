@@ -18,11 +18,8 @@ fn low_points(grid: &[&[i32]]) -> Vec<(usize, usize)> {
             let neighbors: Vec<(usize, usize)> = NEIGHBORS
                 .iter()
                 .map(|(dx, dy)| (x as i32 + dx, y as i32 + dy))
-                .filter(|(x, y)| {
-                    x >= &0
-                        && x < &(width as i32)
-                        && y >= &0
-                        && y < &(height as i32)
+                .filter(|&(x, y)| {
+                    x >= 0 && x < width as i32 && y >= 0 && y < height as i32
                 })
                 .map(|(x, y)| (x as usize, y as usize))
                 .collect();
@@ -56,38 +53,30 @@ pub fn part_two(input: &str) -> i32 {
     let height = grid.len();
     let width = grid[0].len();
     let points = low_points(&grid);
-    let mut basin: Vec<i32> = Vec::new();
+    let mut basins: Vec<i32> = Vec::new();
     for (x, y) in points {
         let mut visited: HashSet<(usize, usize)> = HashSet::new();
-        let mut exp: Vec<(usize, usize)> = vec![(x, y)];
-        while let Some((x, y)) = exp.pop() {
-            let v = grid[y][x];
+        let mut queue: Vec<(usize, usize)> = vec![(x, y)];
+        while let Some((x, y)) = queue.pop() {
+            let range = grid[y][x]..9;
             visited.insert((x, y));
             let neighbors: Vec<(usize, usize)> = NEIGHBORS
                 .iter()
                 .map(|(dx, dy)| (x as i32 + dx, y as i32 + dy))
-                .filter(|(x, y)| {
-                    x >= &0
-                        && x < &(width as i32)
-                        && y >= &0
-                        && y < &(height as i32)
+                .filter(|&(x, y)| {
+                    x >= 0 && x < width as i32 && y >= 0 && y < height as i32
                 })
                 .map(|(x, y)| (x as usize, y as usize))
-                .filter(|(x, y)| !visited.contains(&(*x, *y)))
-                .filter(|(x, y)| {
-                    let nv = grid[*y][*x];
-                    nv < 9 && nv > v
-                })
+                .filter(|&(x, y)| !visited.contains(&(x, y)))
+                .filter(|&(x, y)| range.contains(&grid[y][x]))
                 .collect();
-            for (x, y) in &neighbors {
-                exp.push((*x, *y));
-            }
+            queue.extend(neighbors)
         }
-        basin.push(visited.len() as i32);
+        basins.push(visited.len() as i32);
     }
-    basin.sort_unstable();
-    basin.reverse();
-    basin[0] * basin[1] * basin[2]
+    basins.sort_unstable();
+    basins.reverse();
+    basins[0] * basins[1] * basins[2]
 }
 
 #[cfg(test)]
