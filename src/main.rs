@@ -25,6 +25,7 @@ fn main() {
         puzzle!(7, "The Treachery of Whales", day07),
         puzzle!(8, "Seven Segment Search", day08),
         puzzle!(9, "Smoke Basin", day09),
+        puzzle!(10, "Syntax Scoring", day10),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {
