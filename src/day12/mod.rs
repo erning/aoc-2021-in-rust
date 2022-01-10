@@ -26,45 +26,62 @@ fn parse_input(input: &str) -> HashMap<&str, Vec<&str>> {
     map
 }
 
-fn dfs(
-    map: &HashMap<&str, Vec<&str>>,
-    visited: &HashSet<&str>,
-    node: &str,
-    times: i8,
-) -> i32 {
-    if node == "end" {
-        return 1;
+fn search(map: &HashMap<&str, Vec<&str>>, enable_twice: bool) -> usize {
+    struct Env<'a> {
+        map: &'a HashMap<&'a str, Vec<&'a str>>,
+        visited: HashSet<&'a str>,
+        enable_twice: bool,
+        twiced: Option<&'a str>,
+        count: usize,
     }
-    let mut count = 0;
-    for next in map.get(node).unwrap() {
-        let mut times = times;
-        if visited.contains(next) {
-            if times <= 0 {
-                continue;
+
+    fn dfs(mut env: &mut Env, node: &str) {
+        if node == "end" {
+            env.count += 1;
+            return;
+        }
+        for next in env.map.get(node).unwrap() {
+            if env.visited.contains(next) {
+                if !env.enable_twice || env.twiced.is_some() {
+                    continue;
+                }
+                env.twiced = Some(next);
             }
-            times -= 1;
+            if next.chars().next().unwrap().is_lowercase() {
+                env.visited.insert(next);
+            }
+            dfs(env, next);
+            if env.enable_twice && env.twiced == Some(next) {
+                env.twiced = None
+            } else {
+                env.visited.remove(next);
+            }
         }
-        let mut visited = visited.clone();
-        if next.chars().next().unwrap().is_lowercase() {
-            visited.insert(next);
-        }
-        count += dfs(map, &visited, next, times);
     }
-    count
+
+    let mut visited = HashSet::new();
+    visited.insert("start");
+
+    let mut env = Env {
+        map,
+        visited,
+        enable_twice,
+        twiced: None,
+        count: 0,
+    };
+
+    dfs(&mut env, "start");
+    env.count
 }
 
-pub fn part_one(input: &str) -> i32 {
+pub fn part_one(input: &str) -> usize {
     let map = parse_input(input);
-    let mut visited: HashSet<&str> = HashSet::new();
-    visited.insert("start");
-    dfs(&map, &visited, "start", 0)
+    search(&map, false)
 }
 
-pub fn part_two(input: &str) -> i32 {
+pub fn part_two(input: &str) -> usize {
     let map = parse_input(input);
-    let mut visited: HashSet<&str> = HashSet::new();
-    visited.insert("start");
-    dfs(&map, &visited, "start", 1)
+    search(&map, true)
 }
 
 #[cfg(test)]
