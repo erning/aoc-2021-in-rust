@@ -34,4 +34,16 @@ Part Two: 88612508
 --- Day 8: Seven Segment Search ---
 Part One: 534
 Part Two: 1070188
+
+--- Day 9: Smoke Basin ---
+Part One: 480
+Part Two: 1045660
+
+--- Day 10: Syntax Scoring ---
+Part One: 394647
+Part Two: 2380061249
+
+--- Day 11: Dumbo Octopus ---
+Part One: 1743
+Part Two: 364
 ```
