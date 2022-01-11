@@ -46,4 +46,23 @@ Part Two: 2380061249
 --- Day 11: Dumbo Octopus ---
 Part One: 1743
 Part Two: 364
+
+--- Day 12: Passage Pathing ---
+Part One: 4495
+Part Two: 131254
+
+--- Day 13: Transparent Origami ---
+Part One: 842
+Part Two:
+###  #### #  # ###   ##    ## #### #  #
+#  # #    # #  #  # #  #    #    # #  #
+###  ###  ##   #  # #       #   #  #  #
+#  # #    # #  ###  #       #  #   #  #
+#  # #    # #  # #  #  # #  # #    #  #
+###  #    #  # #  #  ##   ##  ####  ##
+
+
+--- Day 14: Extended Polymerization ---
+Part One: 2745
+Part Two: 3420801168962
 ```

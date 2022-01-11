@@ -61,9 +61,9 @@ fn points_as_string(points: &HashSet<(i32, i32)>) -> String {
             s.push(match points.contains(&(x, y)) {
                 true => '#',
                 false => ' ',
-            })
+            });
         }
-        s.push('\n')
+        s.push('\n');
     }
     s
 }
