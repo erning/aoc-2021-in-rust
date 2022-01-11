@@ -28,6 +28,7 @@ fn main() {
         puzzle!(10, "Syntax Scoring", day10),
         puzzle!(11, "Dumbo Octopus", day11),
         puzzle!(12, "Passage Pathing", day12),
+        puzzle!(13, "Transparent Origami", day13),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {
