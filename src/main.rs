@@ -30,6 +30,7 @@ fn main() {
         puzzle!(12, "Passage Pathing", day12),
         puzzle!(13, "Transparent Origami", day13),
         puzzle!(14, "Extended Polymerization", day14),
+        puzzle!(15, "Chiton", day15),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {
