@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-use std::collections::HashMap;
+use std::collections::HashSet;
 
 fn parse_input(input: &str) -> Vec<Vec<u8>> {
     input
@@ -32,16 +32,18 @@ impl PartialOrd for State {
     }
 }
 
-fn shortest_path(grid: &[Vec<u8>]) -> Option<usize> {
-    let height = grid.len();
-    let width = grid[0].len();
+fn shortest_path(grid: &[Vec<u8>], times: usize) -> Option<usize> {
+    let grid_height = grid.len();
+    let grid_width = grid[0].len();
+    let height = grid_height * times;
+    let width = grid_width * times;
     let start = (0, 0);
     let end = (width - 1, height - 1);
 
-    let mut visited: HashMap<(usize, usize), usize> = HashMap::new();
+    let mut visited: HashSet<(usize, usize)> = HashSet::new();
     let mut queue: BinaryHeap<State> = BinaryHeap::new();
 
-    visited.insert((0, 0), 0);
+    visited.insert(start);
     let state = State {
         cost: 0,
         position: start,
@@ -60,13 +62,18 @@ fn shortest_path(grid: &[Vec<u8>]) -> Option<usize> {
                 x >= 0 && y >= 0 && x < width as i32 && y < height as i32
             })
             .map(|(x, y)| (x as usize, y as usize))
-            .filter(|p| !visited.contains_key(p))
+            .filter(|p| !visited.contains(p))
             .collect();
         for (x, y) in neighbors {
-            let cost = state.cost + grid[y][x] as usize;
-            visited.insert((x, y), cost);
+            let mut cost = grid[y % grid_height][x % grid_width] as usize;
+            cost += x / grid_width;
+            cost += y / grid_height;
+            while cost > 9 {
+                cost -= 9
+            }
+            visited.insert((x, y));
             let state = State {
-                cost,
+                cost: cost + state.cost,
                 position: (x, y),
             };
             queue.push(state);
@@ -77,9 +84,10 @@ fn shortest_path(grid: &[Vec<u8>]) -> Option<usize> {
 
 pub fn part_one(input: &str) -> usize {
     let grid = parse_input(input);
-    shortest_path(&grid).unwrap()
+    shortest_path(&grid, 1).unwrap()
 }
 
-pub fn part_two(input: &str) -> i32 {
-    -1
+pub fn part_two(input: &str) -> usize {
+    let grid = parse_input(input);
+    shortest_path(&grid, 5).unwrap()
 }
