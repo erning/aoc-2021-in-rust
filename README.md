@@ -69,4 +69,8 @@ Part Two: 3420801168962
 --- Day 15: Chiton ---
 Part One: 441
 Part Two: 2849
+
+--- Day 16: Packet Decoder ---
+Part One: 938
+Part Two: 1495959086337
 ```
