@@ -91,3 +91,21 @@ pub fn part_two(input: &str) -> usize {
     let grid = parse_input(input);
     shortest_path(&grid, 5).unwrap()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::read_example;
+
+    #[test]
+    fn example_one() {
+        let input = read_example(15);
+        assert_eq!(part_one(&input), 40);
+    }
+
+    #[test]
+    fn example_two() {
+        let input = read_example(15);
+        assert_eq!(part_two(&input), 315);
+    }
+}
