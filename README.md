@@ -73,4 +73,12 @@ Part Two: 2849
 --- Day 16: Packet Decoder ---
 Part One: 938
 Part Two: 1495959086337
+
+--- Day 17: Trick Shot ---
+Part One: 7626
+Part Two: 2032
+
+--- Day 18: Snailfish ---
+Part One: 4641
+Part Two: 4624
 ```
