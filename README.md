@@ -81,4 +81,16 @@ Part Two: 2032
 --- Day 18: Snailfish ---
 Part One: 4641
 Part Two: 4624
+
+--- Day 19: Beacon Scanner ---
+Part One: 306
+Part Two: 9764
+
+--- Day 20: Trench Map ---
+Part One: 5419
+Part Two: 17325
+
+--- Day 21: Dirac Dice ---
+Part One: 503478
+Part Two: 716241959649754
 ```
