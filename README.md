@@ -93,4 +93,8 @@ Part Two: 17325
 --- Day 21: Dirac Dice ---
 Part One: 503478
 Part Two: 716241959649754
+
+--- Day 22: Reactor Reboot ---
+Part One: 647076
+Part Two: 1233304599156793
 ```
