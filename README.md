@@ -97,4 +97,8 @@ Part Two: 716241959649754
 --- Day 22: Reactor Reboot ---
 Part One: 647076
 Part Two: 1233304599156793
+
+--- Day 23: Amphipod ---
+Part One: 19167
+Part Two: 47665
 ```
