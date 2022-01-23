@@ -114,9 +114,9 @@ impl State {
             }
         }
 
+        // move from room to hallway
         let mut rooms: [Option<usize>; 4] = [None; 4];
         for &(spot, _) in amphipods.iter().filter(|(spot, _)| *spot >= 11) {
-            // move from room to hallway
             let i = (spot - 11) % 4;
             if rooms[i].is_none() || rooms[i].unwrap() > spot {
                 rooms[i] = Some(spot);
