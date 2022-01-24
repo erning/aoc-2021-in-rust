@@ -137,7 +137,7 @@ pub fn part_two(input: &str) -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{read_example, read_as_string};
+    use crate::{read_as_string, read_example};
 
     #[test]
     fn example_one() {
