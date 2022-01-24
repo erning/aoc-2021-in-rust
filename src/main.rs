@@ -3,9 +3,8 @@ use std::fmt::Display;
 
 fn main() {
     macro_rules! puzzle {
-        ($day:expr, $title:expr, $mod:ident) => {
+        ($mod:ident, $title:expr) => {
             (
-                $day,
                 $title,
                 |input| Box::new(aoc::$mod::part_one(input)),
                 |input| Box::new(aoc::$mod::part_two(input)),
@@ -15,30 +14,30 @@ fn main() {
 
     type SolverFn = fn(&str) -> Box<dyn Display>;
 
-    let puzzles: Vec<(u8, &str, SolverFn, SolverFn)> = vec![
-        puzzle!(1, "Sonar Sweep", day01),
-        puzzle!(2, "Dive!", day02),
-        puzzle!(3, "Binary Diagnostic", day03),
-        puzzle!(4, "Giant Squid", day04),
-        puzzle!(5, "Hydrothermal Venture", day05),
-        puzzle!(6, "Lanternfish", day06),
-        puzzle!(7, "The Treachery of Whales", day07),
-        puzzle!(8, "Seven Segment Search", day08),
-        puzzle!(9, "Smoke Basin", day09),
-        puzzle!(10, "Syntax Scoring", day10),
-        puzzle!(11, "Dumbo Octopus", day11),
-        puzzle!(12, "Passage Pathing", day12),
-        puzzle!(13, "Transparent Origami", day13),
-        puzzle!(14, "Extended Polymerization", day14),
-        puzzle!(15, "Chiton", day15),
-        puzzle!(16, "Packet Decoder", day16),
-        puzzle!(17, "Trick Shot", day17),
-        puzzle!(18, "Snailfish", day18),
-        puzzle!(19, "Beacon Scanner", day19),
-        puzzle!(20, "Trench Map", day20),
-        puzzle!(21, "Dirac Dice", day21),
-        puzzle!(22, "Reactor Reboot", day22),
-        puzzle!(22, "Amphipod", day23),
+    let puzzles: Vec<(&str, SolverFn, SolverFn)> = vec![
+        puzzle!(day01, "Sonar Sweep"),
+        puzzle!(day02, "Dive!"),
+        puzzle!(day03, "Binary Diagnostic"),
+        puzzle!(day04, "Giant Squid"),
+        puzzle!(day05, "Hydrothermal Venture"),
+        puzzle!(day06, "Lanternfish"),
+        puzzle!(day07, "The Treachery of Whales"),
+        puzzle!(day08, "Seven Segment Search"),
+        puzzle!(day09, "Smoke Basin"),
+        puzzle!(day10, "Syntax Scoring"),
+        puzzle!(day11, "Dumbo Octopus"),
+        puzzle!(day12, "Passage Pathing"),
+        puzzle!(day13, "Transparent Origami"),
+        puzzle!(day14, "Extended Polymerization"),
+        puzzle!(day15, "Chiton"),
+        puzzle!(day16, "Packet Decoder"),
+        puzzle!(day17, "Trick Shot"),
+        puzzle!(day18, "Snailfish"),
+        puzzle!(day19, "Beacon Scanner"),
+        puzzle!(day20, "Trench Map"),
+        puzzle!(day21, "Dirac Dice"),
+        puzzle!(day22, "Reactor Reboot"),
+        puzzle!(day23, "Amphipod"),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {
@@ -46,18 +45,16 @@ fn main() {
         Some(_) => "example",
     };
 
-    let mut days: Vec<u8> =
+    let mut days: Vec<usize> =
         env::args().filter_map(|a| a.parse().ok()).collect();
 
     if days.is_empty() {
-        for &(day, _, _, _) in &puzzles {
-            days.push(day)
-        }
+        days = (1..=puzzles.len()).collect();
     }
 
     for day in days {
-        let (_, title, part1, part2) = &puzzles[day as usize - 1];
-        let input = aoc::read_as_string(day, filename);
+        let (title, part1, part2) = &puzzles[day - 1];
+        let input = aoc::read_as_string(day as u8, filename);
         let input = input.as_str();
 
         println!("--- Day {}: {} ---", day, title);
