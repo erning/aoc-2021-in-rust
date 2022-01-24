@@ -3,10 +3,13 @@ use std::collections::BinaryHeap;
 use std::collections::HashMap;
 use std::collections::HashSet;
 
+const COSTS: [usize; 5] = [0, 1, 10, 100, 1000];
+
 #[derive(Debug, Clone, Eq, PartialEq)]
 struct State {
     cost: usize,
     burrow: Vec<u8>,
+    #[cfg(debug_assertions)]
     log: Vec<Vec<u8>>,
 }
 
@@ -23,8 +26,14 @@ impl PartialOrd for State {
 }
 
 impl State {
+    #[cfg(debug_assertions)]
     fn new(cost: usize, burrow: Vec<u8>, log: Vec<Vec<u8>>) -> State {
         State { cost, burrow, log }
+    }
+
+    #[cfg(not(debug_assertions))]
+    fn new(cost: usize, burrow: Vec<u8>) -> State {
+        State { cost, burrow }
     }
 
     fn is_final(&self) -> bool {
@@ -34,48 +43,6 @@ impl State {
             }
         }
         true
-    }
-
-    fn cost(v: u8) -> usize {
-        match v {
-            1 => 1,
-            2 => 10,
-            3 => 100,
-            4 => 1000,
-            _ => unreachable!(),
-        }
-    }
-
-    fn path(a: usize, b: usize) -> Vec<usize> {
-        if a == b {
-            return vec![a];
-        }
-        if a >= 11 && b >= 11 && (a - 11) % 4 == (b - 11) % 4 {
-            let mut spots = vec![a];
-            if a < b {
-                spots.append(&mut State::path(a + 4, b));
-            } else {
-                spots.append(&mut State::path(a - 4, b));
-            }
-            return spots;
-        }
-        if a >= 11 {
-            let n = if a >= 15 { a - 4 } else { (a - 11) % 4 * 2 + 2 };
-            let mut spots = vec![a];
-            spots.append(&mut State::path(n, b));
-            return spots;
-        }
-        if b >= 11 {
-            let n = if b >= 15 { b - 4 } else { (b - 11) % 4 * 2 + 2 };
-            let mut spots = State::path(a, n);
-            spots.push(b);
-            return spots;
-        }
-        if a < b {
-            (a..=b).collect()
-        } else {
-            (b..=a).rev().collect()
-        }
     }
 
     fn next_movement(&self) -> Vec<(usize, usize)> {
@@ -132,11 +99,68 @@ impl State {
     }
 }
 
-fn search(burrow: Vec<u8>) -> usize {
-    let mut cache: HashMap<(usize, usize), Vec<usize>> = HashMap::new();
+type PathCache = HashMap<(usize, usize), Vec<usize>>;
+
+fn build_path_cache(depth: usize) -> PathCache {
+    let mut cache: PathCache = HashMap::new();
+
+    fn path(a: usize, b: usize) -> Vec<usize> {
+        if a == b {
+            return vec![a];
+        }
+        if a >= 11 && b >= 11 && (a - 11) % 4 == (b - 11) % 4 {
+            let mut spots = vec![a];
+            if a < b {
+                spots.append(&mut path(a + 4, b));
+            } else {
+                spots.append(&mut path(a - 4, b));
+            }
+            return spots;
+        }
+        if a >= 11 {
+            let n = if a >= 15 { a - 4 } else { (a - 11) % 4 * 2 + 2 };
+            let mut spots = vec![a];
+            spots.append(&mut path(n, b));
+            return spots;
+        }
+        if b >= 11 {
+            let n = if b >= 15 { b - 4 } else { (b - 11) % 4 * 2 + 2 };
+            let mut spots = path(a, n);
+            spots.push(b);
+            return spots;
+        }
+        if a < b {
+            (a..=b).collect()
+        } else {
+            (b..=a).rev().collect()
+        }
+    }
+
+    let len = depth * 4 + 11;
+    for a in 0..len - 1 {
+        for b in a..len {
+            if cache.contains_key(&(a, b)) {
+                continue;
+            }
+            let mut path = path(a, b);
+            cache.insert((a, b), path.clone());
+            path.reverse();
+            cache.insert((b, a), path);
+        }
+    }
+
+    cache
+}
+
+fn search(initial: Vec<u8>, cache: PathCache) -> usize {
     let mut visited: HashSet<Vec<u8>> = HashSet::new();
     let mut heap: BinaryHeap<State> = BinaryHeap::new();
-    let state = State::new(0, burrow, Vec::new());
+
+    #[cfg(not(debug_assertions))]
+    let state = State::new(0, initial);
+    #[cfg(debug_assertions)]
+    let state = State::new(0, initial, Vec::new());
+
     heap.push(state);
 
     while let Some(state) = heap.pop() {
@@ -164,14 +188,7 @@ fn search(burrow: Vec<u8>) -> usize {
                 continue;
             }
 
-            if !cache.contains_key(&(from, to)) {
-                let mut path = State::path(from, to);
-                cache.insert((from, to), path.clone());
-                path.reverse();
-                cache.insert((to, from), path);
-            }
             let path = cache.get(&(from, to)).unwrap();
-
             let mut is_blocked = false;
             for i in &path[1..] {
                 if state.burrow[*i] != 0 {
@@ -184,10 +201,16 @@ fn search(burrow: Vec<u8>) -> usize {
             }
 
             let distance = path.len() - 1;
-            let cost = State::cost(amphipod) * distance + state.cost;
-            let mut log = state.log.clone();
-            log.push(state.burrow.clone());
-            heap.push(State::new(cost, burrow, log));
+            let cost = COSTS[amphipod as usize] * distance + state.cost;
+            #[cfg(not(debug_assertions))]
+            heap.push(State::new(cost, burrow));
+
+            #[cfg(debug_assertions)]
+            {
+                let mut log = state.log.clone();
+                log.push(state.burrow.clone());
+                heap.push(State::new(cost, burrow, log));
+            }
         }
     }
     0
@@ -195,46 +218,30 @@ fn search(burrow: Vec<u8>) -> usize {
 
 #[cfg(debug_assertions)]
 fn print_burrow(burrow: &[u8]) {
-    fn symbol(v: u8) -> char {
-        match v {
-            1 => 'A',
-            2 => 'B',
-            3 => 'C',
-            4 => 'D',
-            _ => '.',
-        }
-    }
+    const SYMBOLS: [char; 5] = ['.', 'A', 'B', 'C', 'D'];
 
+    // hallway
     println!("+-----------------------+");
     print!("|");
-    for &v in &burrow[..11] {
-        print!(" {}", symbol(v));
+    for v in &burrow[..11] {
+        print!(" {}", SYMBOLS[*v as usize]);
     }
     println!(" |");
+
+    // rooms
     let mut iter = burrow[11..].iter().peekable();
-    let v1 = iter.next().unwrap();
-    let v2 = iter.next().unwrap();
-    let v3 = iter.next().unwrap();
-    let v4 = iter.next().unwrap();
-    println!(
-        "+---+ {} | {} | {} | {} +---+",
-        symbol(*v1),
-        symbol(*v2),
-        symbol(*v3),
-        symbol(*v4),
-    );
+    macro_rules! print_room {
+        ($fmt:literal) => {
+            let v1 = SYMBOLS[*iter.next().unwrap() as usize];
+            let v2 = SYMBOLS[*iter.next().unwrap() as usize];
+            let v3 = SYMBOLS[*iter.next().unwrap() as usize];
+            let v4 = SYMBOLS[*iter.next().unwrap() as usize];
+            println!($fmt, v1, v2, v3, v4);
+        };
+    }
+    print_room!("+---+ {} | {} | {} | {} +---+");
     while iter.peek().is_some() {
-        let v1 = iter.next().unwrap();
-        let v2 = iter.next().unwrap();
-        let v3 = iter.next().unwrap();
-        let v4 = iter.next().unwrap();
-        println!(
-            "    | {} | {} | {} | {} |",
-            symbol(*v1),
-            symbol(*v2),
-            symbol(*v3),
-            symbol(*v4),
-        );
+        print_room!("    | {} | {} | {} | {} |");
     }
     println!("    +---+---+---+---+");
     println!();
@@ -258,19 +265,24 @@ fn parse_input(input: &str) -> Vec<u8> {
 }
 
 pub fn part_one(input: &str) -> usize {
-    let data = parse_input(input);
-    search(data)
+    let burrow = parse_input(input);
+    let cache = build_path_cache(2);
+    search(burrow, cache)
 }
 
 pub fn part_two(input: &str) -> usize {
     let origin = parse_input(input);
-    let extend = parse_input("#D#C#B#A#\n#D#B#A#C#");
-    let mut data = Vec::new();
-    data.extend_from_slice(&origin[..11]);
-    data.extend_from_slice(&origin[11..15]);
-    data.extend_from_slice(&extend[..]);
-    data.extend_from_slice(&origin[15..]);
-    search(data)
+    let extend = parse_input(
+        "#D#C#B#A#
+         #D#B#A#C#",
+    );
+    let mut burrow = Vec::new();
+    burrow.extend_from_slice(&origin[..11]);
+    burrow.extend_from_slice(&origin[11..15]);
+    burrow.extend_from_slice(&extend[..]);
+    burrow.extend_from_slice(&origin[15..]);
+    let cache = build_path_cache(4);
+    search(burrow, cache)
 }
 
 #[cfg(test)]
