@@ -38,6 +38,8 @@ fn main() {
         puzzle!(day21, "Dirac Dice"),
         puzzle!(day22, "Reactor Reboot"),
         puzzle!(day23, "Amphipod"),
+        puzzle!(day24, "Arithmetic Logic Unit"),
+        puzzle!(day25, "Sea Cucumber"),
     ];
 
     let filename = match env::args().find(|a| a == "--example") {
