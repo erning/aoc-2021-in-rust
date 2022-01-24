@@ -1,67 +1,48 @@
 use std::collections::HashSet;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-struct Registers {
-    w: i64,
-    x: i64,
-    y: i64,
-    z: i64,
-}
+struct Regs(i64, i64, i64, i64);
 
-impl Registers {
-    fn new() -> Registers {
-        Registers {
-            w: 0,
-            x: 0,
-            y: 0,
-            z: 0,
-        }
-    }
-
+impl Regs {
     fn set(&mut self, n: &str, v: i64) {
         match n {
-            "w" => self.w = v,
-            "x" => self.x = v,
-            "y" => self.y = v,
-            "z" => self.z = v,
+            "w" => self.0 = v,
+            "x" => self.1 = v,
+            "y" => self.2 = v,
+            "z" => self.3 = v,
             _ => unreachable!(),
         }
     }
 
     fn get(&self, n: &str) -> i64 {
         match n {
-            "w" => self.w,
-            "x" => self.x,
-            "y" => self.y,
-            "z" => self.z,
+            "w" => self.0,
+            "x" => self.1,
+            "y" => self.2,
+            "z" => self.3,
             _ => unreachable!(),
         }
     }
 }
 
-fn search(program: Vec<&str>, digits: Vec<u8>) -> String {
+fn search(program: Vec<&str>, digits: Vec<u8>) -> u64 {
     struct Env<'a> {
         program: Vec<&'a str>,
         digits: Vec<u8>,
-        visited: HashSet<(usize, Registers)>,
+        visited: HashSet<(usize, Regs)>,
     }
 
-    fn validate(
-        env: &mut Env,
-        pc: usize,
-        regs: Registers,
-        ds: Vec<u8>,
-    ) -> Option<Vec<u8>> {
+    fn exec(env: &mut Env, pc: usize, regs: Regs) -> Option<Vec<u8>> {
         if env.visited.contains(&(pc, regs)) {
             return None;
         }
         env.visited.insert((pc, regs));
-        if regs.z > 1_000_000 {
+        if regs.3 > 1_000_000 {
             return None;
         }
         if pc >= env.program.len() {
-            if regs.z == 0 {
-                return Some(ds);
+            if regs.3 == 0 {
+                return Some(Vec::with_capacity(14));
             }
             return None;
         }
@@ -73,9 +54,8 @@ fn search(program: Vec<&str>, digits: Vec<u8>) -> String {
         if op == "inp" {
             for d in env.digits.clone() {
                 new_regs.set(a, d as i64);
-                let mut new_ds = ds.clone();
-                new_ds.push(d);
-                if let Some(rv) = validate(env, pc + 1, new_regs, new_ds) {
+                if let Some(mut rv) = exec(env, pc + 1, new_regs) {
+                    rv.push(d);
                     return Some(rv);
                 }
             }
@@ -102,7 +82,7 @@ fn search(program: Vec<&str>, digits: Vec<u8>) -> String {
             _ => unreachable!(),
         };
         new_regs.set(a, v);
-        validate(env, pc + 1, new_regs, ds)
+        exec(env, pc + 1, new_regs)
     }
 
     let mut env = Env {
@@ -111,24 +91,24 @@ fn search(program: Vec<&str>, digits: Vec<u8>) -> String {
         visited: HashSet::new(),
     };
 
-    validate(&mut env, 0, Registers::new(), Vec::new())
+    exec(&mut env, 0, Regs(0, 0, 0, 0))
         .unwrap()
         .iter()
-        .map(|&v| char::from_digit(v as u32, 10).unwrap())
-        .collect()
+        .rev()
+        .fold(0, |acc, &x| acc * 10 + x as u64)
 }
 
 fn parse_input(input: &str) -> Vec<&str> {
     input.lines().collect()
 }
 
-pub fn part_one(input: &str) -> String {
+pub fn part_one(input: &str) -> u64 {
     let program = parse_input(input);
     let digits: Vec<u8> = vec![9, 8, 7, 6, 5, 4, 3, 2, 1];
     search(program, digits)
 }
 
-pub fn part_two(input: &str) -> String {
+pub fn part_two(input: &str) -> u64 {
     let program = parse_input(input);
     let digits: Vec<u8> = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
     search(program, digits)

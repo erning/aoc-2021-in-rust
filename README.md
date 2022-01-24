@@ -101,4 +101,12 @@ Part Two: 1233304599156793
 --- Day 23: Amphipod ---
 Part One: 19167
 Part Two: 47665
+
+--- Day 24: Arithmetic Logic Unit ---
+Part One: 59998426997979
+Part Two: 13621111481315
+
+--- Day 25: Sea Cucumber ---
+Part One: 471
+Part Two: Sleigh keys detected!
 ```
